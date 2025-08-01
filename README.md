@@ -20,8 +20,8 @@ Antes de começar, certifique-se de ter instalado:
 
 ### 1️⃣ Clonar o repositório
 ```sh
-git clone https://github.com/RD-Ricardo/CRUD-Test.git
-cd CRUD-Test
+git clone https://github.com/RD-Ricardo/SeguroPlatform.git
+cd SeguroPlatform
 ```
 
 ### Comando docker

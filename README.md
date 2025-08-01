@@ -1,6 +1,5 @@
 # SeguroPlatform
 
-# CRUD-Test
 
 # 🚀 Projeto com Docker
 

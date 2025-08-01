@@ -1,0 +1,116 @@
+version: "3"
+name: SeguroPratform
+services:
+    hiring-api:
+        image: hiring-api:latest
+        container_name: hiring-api
+        build:
+            context: ../
+            dockerfile: ./src/Hiring/Hiring.Api/Dockerfile/
+        ports:
+            - "8080:8080"
+            - "8081:8081"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - MongoDbSettings__ConnectionString=mongodb://mongo:27017
+            - MongoDbSettings__DatabaseName=hiring
+        depends_on:
+            - mongo
+        restart: always
+        networks: 
+            - default
+
+    hiring-worker:
+        image: hiring-worker:latest
+        container_name: hiring-worker
+        build:
+            context: ../
+            dockerfile: ./src/Hiring/Hiring.Worker/Dockerfile/
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - AmqpSettings__Host=rabbitmq
+            - AmqpSettings__Port=5672
+            - AmqpSettings__UserName=rabbitmq
+            - AmqpSettings__Password=rabbitmq
+            - AmqpSettings__VirtualHost=/
+            - MongoDbSettings__ConnectionString=mongodb://mongo:27017
+            - MongoDbSettings__DatabaseName=hiring
+        depends_on:
+            - rabbitmq
+            - mongo
+        restart: always
+        networks: 
+            - default
+    proposal-api:
+        image: proposal-api:latest
+        container_name: proposal-api
+        build:
+            context: ../
+            dockerfile: ./src/Proposal/Proposal.Api/Dockerfile/
+        ports:
+            - "8082:8080"
+            - "8083:8081"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ConnectionStrings__DefaultConnection=Server=postgress;Port=5432;Database=postgres;User Id=postgres;Password=postgres;
+            - AmqpSettings__Host=rabbitmq
+            - AmqpSettings__Port=5672
+            - AmqpSettings__UserName=rabbitmq
+            - AmqpSettings__Password=rabbitmq
+            - AmqpSettings__VirtualHost=/
+        depends_on:
+            - rabbitmq
+            - postgress
+        restart: always
+        networks: 
+            - default
+    rabbitmq:
+      image: rabbitmq:3.12-management-alpine
+      container_name: "rabbitmq"
+      restart: always
+      ports:
+        - 5672:5672
+        - 15672:15672
+      volumes:
+        - rabbit-data:/var/lib/rabbitmq
+        - rabbit-log:/var/log/rabbitmq
+
+      environment:
+        RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+        RABBITMQ_DEFAULT_USER: "rabbitmq"
+        RABBITMQ_DEFAULT_PASS: "rabbitmq"
+        RABBITMQ_DEFAULT_VHOST: "/"
+      networks: 
+            - default
+    postgress:
+      image: postgres:13.1
+      restart: always
+      environment:
+        POSTGRES_USER: "postgres"
+        POSTGRES_PASSWORD: "postgres"
+        POSTGRES_DB: "postgres" 
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgress-db:/data
+      networks: 
+        - default
+    mongo:
+      image: mongo:6.0
+      restart: always
+      ports:
+        - "27017:27017"
+      volumes:
+        - mongo-data:/data/db
+      networks: 
+        - default 
+    
+volumes:
+  rabbit-data:
+  rabbit-log:
+  postgress-db:
+  mongo-data:
+
+networks:
+    default:
+        name: network_default

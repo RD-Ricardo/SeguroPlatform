@@ -11,6 +11,9 @@
 - [x] Repository Pattern  
 - [x] Pattern UserCases  
 
+<img width="538" height="521" alt="image" src="https://github.com/user-attachments/assets/b7cc6ea2-e7b1-4f3d-ba8d-ca427ac35821" />
+
+
 
 # 🚀 Projeto com Docker
 

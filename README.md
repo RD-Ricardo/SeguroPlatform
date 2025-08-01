@@ -1,5 +1,16 @@
 # SeguroPlatform
 
+## **Tecnologias Utilizadas**
+
+- [x] .NET 8
+- [x] Arquitetura Hexagonal (Ports & Adapters)  
+- [x] RabbitMQ
+- [X] PostgreSQL
+- [x] MongoDb
+- [x] Docker
+- [x] Repository Pattern  
+- [x] Pattern UserCases  
+
 
 # 🚀 Projeto com Docker
 
